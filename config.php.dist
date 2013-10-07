@@ -1,0 +1,4 @@
+<?php
+const CLIENT_ID     = 'OAuth Client Id';
+const CLIENT_SECRET = 'OAuth Secret';
+const REDIRECT_URI  = 'http://yourdomain/dashboard';

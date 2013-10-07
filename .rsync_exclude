@@ -1,0 +1,5 @@
+.git*
+.rsync*
+*swp
+cache.data
+config.php.dist
