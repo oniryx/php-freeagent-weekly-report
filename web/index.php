@@ -90,15 +90,19 @@ $app->get('/dashboard', function() use ($app)  {
   $date_to    = is_null($date_to) ? date('Y-m-d', strtotime('this week sunday')) : $date_to;
   $response   = $app->client->fetch(API_ROOT.'timeslips?from_date='.$date_from.'&to_date='.$date_to);
   $timeslips  = $response['result']['timeslips'];
-  $total      = array('b'=>0, 't'=>0);
+  $total      = array('b'=>0, 't'=>0, 'v'=>0);
   $hours      = array();
   foreach($timeslips as $t) {
-    $hours[ basename($t['project']) ] = array('b' => 0, 't' => 0);
+    $hours[ basename($t['project']) ] = array('b' => 0, 't' => 0, 'v' => 0);
   }
   foreach($timeslips as $t) {
-    if($app->cache['tasks'][ basename($t['task']) ]['is_billable']) {
+    $_task = $app->cache['tasks'][ basename($t['task']) ];
+    $hourly_rate = $_task['billing_period']=='hour' ? $_task['billing_rate'] : $_task['billing_rate']/7;
+    if($_task['is_billable']) {
       $hours[ basename($t['project']) ][ 'b' ] += $t['hours'];
+      $hours[ basename($t['project']) ][ 'v' ] += $t['hours'] * $hourly_rate;
       $total['b']+= $t['hours'];
+      $total['v']+= $t['hours'] * $hourly_rate;
     }
     $hours[ basename($t['project']) ][ 't' ] += $t['hours'];
     $total['t']+= $t['hours'];
