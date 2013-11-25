@@ -88,7 +88,7 @@ $app->get('/dashboard', function() use ($app)  {
   $date_from  = is_null($date_from) ? date('Y-m-d', strtotime('this week monday')) : $date_from;
   $date_to    = $app->request()->get('date_to');
   $date_to    = is_null($date_to) ? date('Y-m-d', strtotime('this week sunday')) : $date_to;
-  $response   = $app->client->fetch(API_ROOT.'timeslips?from_date='.$date_from.'&to_date='.$date_to);
+  $response   = $app->client->fetch(API_ROOT.'timeslips?from_date='.$date_from.'&to_date='.$date_to.'&per_page=100');
   $timeslips  = $response['result']['timeslips'];
   $total      = array('b'=>0, 't'=>0, 'v'=>0);
   $hours      = array();
