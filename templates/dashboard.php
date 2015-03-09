@@ -5,7 +5,6 @@
   <body>
   <form method="get">
     <input type="text" name="date_from" value="<?php echo $date_from ?>" />
-    <input type="text" name="date_to" value="<?php echo $date_to ?>" />
     <button>Submit</button>
   </form>
   <table>

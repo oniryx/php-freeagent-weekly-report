@@ -59,7 +59,7 @@ $app->get('/dashboard', function() use ($app)  {
   if(is_null($app->cache) || $app->request()->get('reload')) {
     // LOAD PROJECTS
     $app->cache['projects'] = array();
-    $response = $app->client->fetch(API_ROOT.'projects');
+    $response = $app->client->fetch(API_ROOT.'projects?per_page=100');
     foreach($response['result']['projects'] as $p) {
       $project_id = basename($p['url']);
       $app->cache['projects'][ $project_id ] = $p;
@@ -67,7 +67,7 @@ $app->get('/dashboard', function() use ($app)  {
     // LOAD TASKS
     $app->cache['tasks'] = array();
     foreach($app->cache['projects'] as $p_id=>$p) {
-      $response = $app->client->fetch(API_ROOT.'tasks?project='.$p_id);
+      $response = $app->client->fetch(API_ROOT.'tasks?project='.$p_id.'&per_page=100');
       foreach($response['result']['tasks'] as $t) {
         $task_id = basename($t['url']);
         $app->cache['tasks'][ $task_id ] = $t;
@@ -75,7 +75,7 @@ $app->get('/dashboard', function() use ($app)  {
     }
     // LOAD CONTACTS
     $app->cache['contacts'] = array();
-    $response = $app->client->fetch('https://api.freeagent.com/v2/contacts');
+    $response = $app->client->fetch(API_ROOT.'contacts&per_page=100');
     foreach($response['result']['contacts'] as $c) {
       $contact_id = basename($c['url']);
       $app->cache['contacts'][ $contact_id ] = $c;
@@ -87,7 +87,7 @@ $app->get('/dashboard', function() use ($app)  {
   $date_from  = $app->request()->get('date_from');
   $date_from  = is_null($date_from) ? date('Y-m-d', strtotime('this week monday')) : $date_from;
   $date_to    = $app->request()->get('date_to');
-  $date_to    = is_null($date_to) ? date('Y-m-d', strtotime('this week sunday')) : $date_to;
+  $date_to    = is_null($date_to) ? date('Y-m-d', strtotime($date_from.' this week sunday')) : $date_to;
   $response   = $app->client->fetch(API_ROOT.'timeslips?from_date='.$date_from.'&to_date='.$date_to.'&per_page=100');
   $timeslips  = $response['result']['timeslips'];
   $total      = array('b'=>0, 't'=>0, 'v'=>0);
